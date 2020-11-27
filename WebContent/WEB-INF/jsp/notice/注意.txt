@@ -1,0 +1,41 @@
+1 发布公告时，用2个隐藏域 <input type="hidden" name="id" id="id" value="${notice.id }" />
+		<input type="hidden" id="text" name="text" value="${notice.content}" />
+		
+2 提交之前
+<script type="text/javascript">
+		//实例化编辑器
+		//建议使用工厂方法getEditor创建和引用编辑器实例，如果在某个闭包下引用该编辑器，直接调用UE.getEditor('editor')就能拿到相关的实例
+		$(function() {
+			var ue = UE.getEditor('editor');
+			//回显数据
+			if (document.getElementById("id").value != null) {
+
+				var ue = UE.getEditor('editor');
+
+				var htmlStr = $("#text").val();
+
+				ue.ready(function() {
+					//把文本编辑器的内容设值
+					ue.setContent(htmlStr, false);
+
+				});
+
+			}
+
+			$("#noticeForm").submit(
+					function() {
+						if (!UE.getEditor('editor').hasContents()) {
+							alert('请先填写内容!');
+						} else {
+							var content = UE.getEditor('editor').getContent();
+							content = content
+									.replace(new RegExp("<", "g"), "<")
+									.replace(new RegExp(">", "g"), ">")
+									.replace(new RegExp("\"", "g"), "");
+						    //把文本编辑器的内容赋值给隐藏域，提交到后台
+							document.getElementById("text").value = content;
+							$("#noticeForm").submit();
+						}
+					})
+		})
+	</script>
